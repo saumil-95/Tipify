@@ -1,0 +1,466 @@
+<% layout('layouts/customerBoilerplate') %>
+<% pageName = 'tipForm' %>
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <div id="message"></div>
+    
+    <div class="container-box">
+     
+        
+        <header class="header">
+            <h1>Say Thanks with a Tip</h1>
+            <p>Appreciate great service? Let them know!</p>
+        </header>
+
+        <div class="form-container">
+            <h2><center>Tip Payment</center></h2>
+            <form action="/process-tip" method="POST">
+                <input type="hidden" name="employeeId" value="<%= employee._id %>">
+                <input type="hidden" name="hotelId" value="<%= hotel._id %>">
+                <h2><center><%= employee.username %></center></h2><br><br>
+                
+                <div class="form-group">
+                    <label for="amount">Tip Amount (₹):</label>
+                    
+                    <!-- Quick Amount Selection -->
+                    <div class="quick-amounts">
+                        <button type="button" class="amount-button" data-amount="50">₹50</button>
+                        <button type="button" class="amount-button" data-amount="100">₹100</button>
+                        <button type="button" class="amount-button" data-amount="200">₹200</button>
+                        <button type="button" class="amount-button" data-amount="500">₹500</button>
+                    </div>
+
+                    <!-- Custom Amount Input -->
+                    <div class="custom-amount-label">Or enter custom amount:</div>
+                    <div class="currency-input">
+                        <span class="currency-symbol">₹</span>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            name="amount" 
+                            min="10" 
+                            step="0.01"
+                            placeholder="Enter custom amount (minimum ₹10)"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select id="paymentMethod" name="paymentMethod" required>
+                        <option value="stripe_card">Card</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                    <p style="color: lightslategray; font-size:14px">*Minimum amount for card payment is ₹50</p>
+                </div>
+
+                <!-- UPI Payment Options -->
+                <div id="upiOptions" class="upi-options">
+                    <p>Select your UPI app:</p>
+                    <button type="button" class="upi-button" onclick="submitUPIPayment('gpay')">
+                        <img src="/images/appLogos/gpay.png" alt="Google Pay" class="upi-logo"> Google Pay
+                    </button>
+                    <button type="button" class="upi-button" onclick="submitUPIPayment('phonepe')">
+                        <img src="/images/appLogos/phonepe.png" alt="PhonePe" class="upi-logo"> PhonePe
+                    </button>
+                    <button type="button" class="upi-button" onclick="submitUPIPayment('paytm')">
+                        <img src="/images/appLogos/paytm.png" alt="Paytm" class="upi-logo"> Paytm
+                    </button>
+                </div>
+                <br>
+
+
+                 <!-- Stripe Card Payment Fields -->
+            <div id="cardFields" class="hidden">
+                <div id="card-element" class="stripe-card"></div> <!-- Stripe Elements container -->
+                <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div> <!-- Error display -->
+            </div>
+            <br><br>
+
+
+
+
+                <button type="submit" id="submitButton" class="submit-button">
+                    Pay Tip
+                </button>
+
+
+
+
+                <!-- Security Note -->
+                <div class="security-note">
+                    <h4>🔒 Secure Payment</h4>
+                    <p>Your payment information is encrypted and secure. Tips go directly to the team member.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <!-- Script Section -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+const stripe = Stripe('<%= stripePublicKey %>');
+const elements = stripe.elements();
+const cardElement = elements.create('card', {
+    style: {
+        base: {
+            fontSize: '16px',
+            color: '#32325d',
+            '::placeholder': { color: '#aab7c4' },
+        },
+    },
+});
+
+cardElement.mount('#card-element');
+
+const paymentMethodSelect = document.getElementById("paymentMethod");
+const upiOptions = document.getElementById("upiOptions");
+const cardFields = document.getElementById("cardFields");
+const submitButton = document.getElementById("submitButton");
+const amountInput = document.getElementById("amount");
+const amountButtons = document.querySelectorAll(".amount-button");
+const form = document.querySelector("form");
+
+// Handle quick amount selection
+amountButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const amount = button.getAttribute("data-amount");
+        amountButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        amountInput.value = amount;
+    });
+});
+
+// Handle payment method change
+paymentMethodSelect.addEventListener("change", () => {
+    if (paymentMethodSelect.value === "upi") {
+        upiOptions.style.display = "block";
+        cardFields.style.display = "none";
+    } else if (paymentMethodSelect.value === "stripe_card") {
+        cardFields.style.display = "block";
+        upiOptions.style.display = "none";
+    } else {
+        upiOptions.style.display = "none";
+        cardFields.style.display = "none";
+    }
+});
+
+// Handle form submission
+form.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const paymentMethod = paymentMethodSelect.value;
+
+    if (paymentMethod === "stripe_card") {
+        submitButton.innerHTML = "⏳ Processing Payment...";
+        submitButton.disabled = true;
+
+        // Clear any previous errors
+        const errorDiv = document.getElementById('card-errors');
+        errorDiv.textContent = '';
+
+        try {
+            // Create Stripe Payment Method
+            const { paymentMethod: stripePaymentMethod, error } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+            });
+
+            if (error) {
+                // Display Stripe card errors
+                errorDiv.textContent = error.message;
+                submitButton.innerHTML = "Pay Tip";
+                submitButton.disabled = false;
+                return;
+            }
+
+            // Create form data object
+            const formData = new FormData(form);
+            formData.append('stripePaymentMethodId', stripePaymentMethod.id);
+
+            // Convert FormData to URLSearchParams for proper form submission
+            const params = new URLSearchParams();
+            for (const [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+
+            const response = await fetch('/process-tip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params.toString()
+            });
+
+            if (response.redirected) {
+                // Handle redirect (success or failure)
+                window.location.href = response.url;
+            } else {
+                // Handle JSON response (e.g., requires_action for 3D Secure)
+                const result = await response.json();
+                
+                if (result.requires_action) {
+                    // Handle 3D Secure authentication
+                    const { error: confirmError } = await stripe.confirmCardPayment(
+                        result.payment_intent.client_secret
+                    );
+
+                    if (confirmError) {
+                        errorDiv.textContent = confirmError.message;
+                        submitButton.innerHTML = "Pay Tip";
+                        submitButton.disabled = false;
+                    } else {
+                        // Payment succeeded after authentication
+                        window.location.href = `/hotel/tipEmployee/<%= employee._id %>?success=true&message=Payment%20successful`;
+                    }
+                } else {
+                    // Handle other responses
+                    submitButton.innerHTML = "Pay Tip";
+                    submitButton.disabled = false;
+                    errorDiv.textContent = "Payment failed. Please try again.";
+                }
+            }
+
+        } catch (fetchError) {
+            console.error('Payment processing error:', fetchError);
+            errorDiv.textContent = "Payment failed. Please try again.";
+            submitButton.innerHTML = "Pay Tip";
+            submitButton.disabled = false;
+        }
+
+    } else {
+        // Handle UPI or other payment methods - use normal form submission
+        form.submit();
+    }
+});
+
+// Submit UPI payment
+function submitUPIPayment(app) {
+    const upiAppInput = document.createElement("input");
+    upiAppInput.type = "hidden";
+    upiAppInput.name = "upiApp";
+    upiAppInput.value = app;
+    form.appendChild(upiAppInput);
+    form.submit();
+}
+
+// Handle URL parameters for success/failure messages
+const params = new URLSearchParams(window.location.search);
+const success = params.get("success");
+const message = params.get("message");
+const messageDiv = document.getElementById("message");
+
+if (success === "true") {
+    messageDiv.innerHTML = `✅ ${message || "Payment Successful! Thank you for your generosity."}`;
+    messageDiv.className = "message success";
+} else if (success === "false") {
+    messageDiv.innerHTML = `❌ ${message || "Payment Failed. Please try again or contact support."}`;
+    messageDiv.className = "message failure";
+}
+
+// Add some interactive feedback
+const inputs = document.querySelectorAll('input, select');
+inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+        this.parentElement.style.transition = 'transform 0.2s ease';
+    });
+
+    input.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+    });
+});
+
+// Format currency input
+document.getElementById('amount').addEventListener('input', function(e) {
+    let value = e.target.value;
+    value = value.replace(/[^0-9.]/g, '');
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    if (parts[1] && parts[1].length > 2) {
+        value = parts[0] + '.' + parts[1].substring(0, 2);
+    }
+    e.target.value = value;
+});
+</script>
+
+
+<script>
+    // Initialize the application
+  document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+  });
+  
+  function initializeApp() {
+      setupNavbarScroll();
+      setupScrollAnimations();
+      setupFormValidation();
+      checkManagerStatus();
+      animateStepProgress();
+  }
+  
+  // Navbar scroll effect
+  function setupNavbarScroll() {
+      const navbar = document.querySelector('.custom-navbar');
+      
+      window.addEventListener('scroll', function() {
+          if (window.scrollY > 100) {
+              navbar.classList.add('scrolled');
+          } else {
+              navbar.classList.remove('scrolled');
+          }
+      });
+  }
+  </script>
+
+
+    <!-- <script>
+        const paymentMethodSelect = document.getElementById("paymentMethod");
+        const upiOptions = document.getElementById("upiOptions");
+        const submitButton = document.getElementById("submitButton");
+        const amountInput = document.getElementById("amount");
+        const amountButtons = document.querySelectorAll(".amount-button");
+
+        // Handle quick amount selection
+        amountButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const amount = button.getAttribute("data-amount");
+                
+                // Remove active class from all buttons
+                amountButtons.forEach(btn => btn.classList.remove("active"));
+                
+                // Add active class to clicked button
+                button.classList.add("active");
+                
+                // Set the amount in the input field
+                amountInput.value = amount;
+                
+                // Clear custom amount when quick amount is selected
+                amountInput.placeholder = "Quick amount selected: ₹" + amount;
+            });
+        });
+
+        // Handle custom amount input
+        amountInput.addEventListener("input", () => {
+            // Remove active class from all quick amount buttons when typing custom amount
+            amountButtons.forEach(btn => btn.classList.remove("active"));
+            amountInput.placeholder = "Enter custom amount (minimum ₹10)";
+        });
+
+        paymentMethodSelect.addEventListener("change", () => {
+            if (paymentMethodSelect.value === "upi") {
+                upiOptions.style.display = "block";
+                submitButton.style.display = "none";
+            } else if (paymentMethodSelect.value === "stripe_card") {
+                upiOptions.style.display = "none";
+                submitButton.style.display = "block";
+            } else {
+                upiOptions.style.display = "none";
+                submitButton.style.display = "block";
+            }
+        });
+
+        function submitUPIPayment(app) {
+            const form = document.querySelector("form");
+            const upiAppInput = document.createElement("input");
+            upiAppInput.type = "hidden";
+            upiAppInput.name = "upiApp";
+            upiAppInput.value = app;
+            form.appendChild(upiAppInput);
+            
+            // Add visual feedback
+            const clickedButton = event.target;
+            clickedButton.style.background = '#667eea';
+            clickedButton.style.color = 'white';
+            clickedButton.innerHTML = '⏳ Processing...';
+            
+            setTimeout(() => {
+                form.submit();
+            }, 500);
+        }
+
+        // Handle URL parameters for success/failure messages
+        const params = new URLSearchParams(window.location.search);
+        const success = params.get("success");
+        const messageDiv = document.getElementById("message");
+
+        if (success === "true") {
+            messageDiv.innerHTML = "✅ Payment Successful! Thank you for your generosity.";
+            messageDiv.className = "message success";
+        } else if (success === "false") {
+            messageDiv.innerHTML = "❌ Payment Failed. Please try again or contact support.";
+            messageDiv.className = "message failure";
+        }
+
+        // Form validation
+        document.querySelector("form").addEventListener("submit", (e) => {
+            const amountInput = document.getElementById("amount");
+            const amount = parseFloat(amountInput.value);
+            const paymentMethod = document.getElementById("paymentMethod").value;
+        
+            if (isNaN(amount) || amount < 10) {
+                e.preventDefault();
+                alert("💡 Minimum tip amount is ₹10. Please enter a valid amount.");
+                amountInput.focus();
+                return;
+            }
+
+            if (!paymentMethod) {
+                e.preventDefault();
+                alert("💡 Please select a payment method.");
+                paymentMethodSelect.focus();
+                return;
+            }
+        
+            // Format amount to two decimal places
+            amountInput.value = amount.toFixed(2);
+            
+            // Add loading state to submit button
+            if (paymentMethod === 'stripe_card') {
+                submitButton.innerHTML = '⏳ Processing Payment...';
+                submitButton.disabled = true;
+            }
+        });
+
+        // Add some interactive feedback
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+                this.parentElement.style.transition = 'transform 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Format currency input
+        document.getElementById('amount').addEventListener('input', function(e) {
+            let value = e.target.value;
+            // Remove any non-numeric characters except decimal point
+            value = value.replace(/[^0-9.]/g, '');
+            // Ensure only one decimal point
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            // Limit to 2 decimal places
+            if (parts[1] && parts[1].length > 2) {
+                value = parts[0] + '.' + parts[1].substring(0, 2);
+            }
+            e.target.value = value;
+        });
+    </script> -->
+</body>
+</html>

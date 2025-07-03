@@ -1,0 +1,214 @@
+
+<% layout('layouts/customerBoilerplate') %>
+<% pageName = 'tipList' %>
+
+<body>
+    <br><br><br><br><br>
+     <!-- Welcome Modal -->
+     <div class="welcome-modal" id="welcomeModal">
+        <div class="welcome-content">
+            <div class="welcome-icon">🏨</div>
+            <h2 class="welcome-title">Welcome!</h2>
+            <p class="welcome-subtitle">
+                Thank you for choosing us! Show your appreciation to our amazing team members who made your stay special.
+            </p>
+            <button class="continue-btn" onclick="closeWelcome()">
+                Start Tipping ✨
+            </button>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <header class="header">
+            <h1><%= hotel.name %> Team</h1>
+            <p style="color:white;">Appreciate our amazing team with a tip</p>
+        </header>
+
+
+
+        <div class="filters-container">
+            <!-- Filter Buttons -->
+            <div class="staff-filters">
+                <a href="/hotel/tip/<%= hotel.locationID.id %>/search" class="filter-btn active" data-filter="all">All Staff</a>
+                <a href="/hotel/tip/<%= hotel.locationID.id %>/search?query=waiter" class="filter-btn" data-filter="waiter">Waiters</a>
+                <a href="/hotel/tip/<%= hotel.locationID.id %>/search?query=chef" class="filter-btn" data-filter="chef">Chefs</a>
+                <a href="/hotel/tip/<%= hotel.locationID.id %>/search?query=housekeeping" class="filter-btn" data-filter="housekeeping">Housekeepers</a>
+                <a href="/hotel/tip/<%= hotel.locationID.id %>/search?query=bartender" class="filter-btn" data-filter="bartender">Bartenders</a>
+            </div>
+        
+            <!-- Search Form -->
+            <form action="/hotel/tip/<%= hotel.locationID.id %>/search" method="get" class="search-form">
+                <div class="search-input-group">
+                    <input 
+                        type="text"
+                        name="query"
+                        class="search-input"
+                        placeholder="Search by name or role..."
+                        value="<%= query || '' %>" 
+                        required
+                    />
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+
+        <ul class="employees-grid">
+            <% employees.filter(employee => employee.isActive).forEach(employee => { %>
+                <li class="fade-in" style="animation-delay: 700ms;">
+                    <div class="employee-card">
+                        <div class="card-content">
+                            <img 
+                                src="<%= employee.photo.url %>" 
+                                alt="<%= employee.username %>'s photo" 
+                                class="employee-photo"
+                                loading="lazy"
+                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNFMkU4RjAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM3IiByPSIxMyIgZmlsbD0iIzk3QTNCNCIvPjxwYXRoIGQ9Im0yNS41IDc1YzAtMTMuOCAxMS4yLTI1IDI1LTI1czI1IDExLjIgMjUgMjVaIiBmaWxsPSIjOTdBM0I0Ii8+PC9zdmc+'" 
+                            >
+                            <div class="employee-info">
+                                <h3 class="employee-name" style="color: #2C3E50; font-size: 20px; font-family: 'Playfair Display', serif;">
+                                    <%= employee.username %>
+                                </h3>
+                                <span class="employee-role"><%= employee.role.toUpperCase() %></span>
+                            </div>
+                        </div>
+                        <div class="tip-section">
+                            <button class="tip-button" onclick="window.location.href='/hotel/tipEmployee/<%= employee._id %>'">
+                                ₹ Send Tip
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+        
+    </div>
+
+    <script>
+
+        // Welcome modal functionality
+        
+
+      // Option 1: Show once per browser session (resets when browser is closed)
+function checkAndShowWelcome() {
+    const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+    const modal = document.getElementById('welcomeModal');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (!hasSeenWelcome) {
+        // Show modal for first-time visitors this session
+        modal.style.display = 'flex'; // or however you show your modal
+    } else {
+        // Hide modal and show main content immediately for returning visitors
+        modal.classList.add('hidden');
+        mainContent.classList.add('visible');
+    }
+}
+
+function closeWelcome() {
+    const modal = document.getElementById('welcomeModal');
+    const mainContent = document.getElementById('mainContent');
+    
+    // Mark as seen in this session
+    sessionStorage.setItem('hasSeenWelcome', 'true');
+    
+    modal.classList.add('hidden');
+    setTimeout(() => {
+        mainContent.classList.add('visible');
+    }, 300);
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', checkAndShowWelcome);
+
+
+        // Handle tip button clicks
+        function tipEmployee(employeeId, employeeName) {
+            // Add haptic feedback for mobile devices
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+            
+            // Show confirmation with better UX
+            if (confirm(`Tip ${employeeName}?\n\nYou will be redirected to the secure payment page.`)) {
+                // In a real app, this would redirect to the tip page
+                window.location.href = `/hotel/tipEmployee/${employeeId}`;
+                
+                // For demo purposes, show alert
+                // setTimeout(() => {
+                //     alert(`Redirecting to tip page for ${employeeName}...`);
+                // }, 100);
+            }
+        }
+
+        // Handle online/offline states
+        window.addEventListener('online', () => {
+            document.body.style.filter = 'none';
+        });
+
+        window.addEventListener('offline', () => {
+            document.body.style.filter = 'grayscale(100%)';
+        });
+
+        // Performance optimization: Lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+        }
+
+
+
+        setTimeout(() => {
+            const modal = document.getElementById('welcomeModal');
+            if (!modal.classList.contains('hidden')) {
+                closeWelcome();
+            }
+        }, 10000);
+
+
+    </script>
+
+    <script>
+        // Initialize the application
+      document.addEventListener('DOMContentLoaded', function() {
+          initializeApp();
+      });
+      
+      function initializeApp() {
+          setupNavbarScroll();
+          setupScrollAnimations();
+          setupFormValidation();
+          checkManagerStatus();
+          animateStepProgress();
+      }
+      
+      // Navbar scroll effect
+      function setupNavbarScroll() {
+          const navbar = document.querySelector('.custom-navbar');
+          
+          window.addEventListener('scroll', function() {
+              if (window.scrollY > 100) {
+                  navbar.classList.add('scrolled');
+              } else {
+                  navbar.classList.remove('scrolled');
+              }
+          });
+      }
+      </script>
+</body>
+</html>

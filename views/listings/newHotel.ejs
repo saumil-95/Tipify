@@ -1,0 +1,109 @@
+
+<% layout('layouts/managerBoilerplate') %>
+<% pageName = 'newHotel' %>
+<body>
+  <br><br><br><br><br>
+  <div class="container-box">
+    <!-- Header -->
+    <div class="header">
+      <h1>Add Your Hotel</h1>
+      <p>Add your luxury hotel to our premium network</p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container">
+      <!-- Hotel Search Section -->
+      <div class="search-section">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M21 20l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          Find Existing Hotels
+        </h2>
+        <p>Search for existing hotels in India</p>
+        <div class="form-group">
+          <div class="input-container">
+            <input type="text" id="hotelQuery" class="form-input" placeholder=" " autocomplete="off">
+            <label for="hotelQuery" class="form-label">Search Hotels (e.g., Mumbai, Delhi, Taj Hotel)</label>
+            <div id="suggestionList" class="suggestion-list" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Form -->
+      <form action="/hotel" method="POST" id="hotelForm" class="hotel-form">
+        <div class="form-section">
+          <h3>Basic Information</h3>
+          
+          <!-- Hotel Name -->
+          <div class="form-group">
+            <div class="input-container">
+              <input type="text" id="name" name="name" maxlength="50" required class="form-input" placeholder=" ">
+              <label for="name" class="form-label">Hotel Name *</label>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <div class="input-container">
+              <textarea id="description" name="description" minlength="10" maxlength="1000" required class="form-textarea" rows="4" placeholder=" "></textarea>
+              <label for="description" class="form-label">Description *</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Location Details</h3>
+          
+          <!-- Address -->
+          <div class="form-group">
+            <div class="input-container">
+              <input type="text" id="address" name="address" class="form-input" placeholder=" ">
+              <label for="address" class="form-label">Street Address</label>
+            </div>
+          </div>
+
+          <!-- City and State -->
+          <div class="form-row">
+            <div class="form-group">
+              <div class="input-container">
+                <input type="text" id="city" name="city" required class="form-input" placeholder=" ">
+                <label for="city" class="form-label">City *</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-container">
+                <input type="text" id="state" name="state" required class="form-input" placeholder=" ">
+                <label for="state" class="form-label">State *</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zip Code -->
+          <div class="form-group">
+            <div class="input-container">
+              <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{6}" class="form-input" placeholder=" " required>
+              <label for="zipCode" class="form-label">Zip Code (6 digits)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden coordinates -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            <span id="submitText">Register Hotel</span>
+            <div id="submitLoader" class="loading" style="display: none;"></div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+    <script src="/js/newHotel.js"></script>
+</body>
+</html>

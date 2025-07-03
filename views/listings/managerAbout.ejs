@@ -1,0 +1,1282 @@
+<% layout('layouts/managerBoilerplate') %>
+<% pageName = 'managerAbout' %>
+    
+    <style>
+        /* Custom Properties */
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #f39c12;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            --shadow-light: 0 5px 15px rgba(0,0,0,0.08);
+            --shadow-medium: 0 10px 30px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .fade-in-left {
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        .fade-in-right {
+            animation: fadeInRight 1s ease-out;
+        }
+
+        
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            background: url('https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 90, 160, 0.85) 0%, rgba(46, 204, 113, 0.7) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 100px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Story Section */
+        .story-section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(44, 90, 160, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .story-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .story-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .story-image {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .story-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Mission Section */
+        .mission-section {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .mission-card {
+            background: white;
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(44, 90, 160, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .mission-icon {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .mission-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .mission-card p {
+            color: #6c757d;
+            line-height: 1.7;
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .value-item {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(44, 90, 160, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .value-icon {
+            background: var(--gradient-gold);
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .value-item h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .value-item p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(44, 90, 160, 0.1);
+            transition: all 0.4s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 4px solid white;
+            box-shadow: var(--shadow-medium);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover .team-photo {
+            transform: scale(1.1);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .team-role {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .team-bio {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-link {
+            background: rgba(44, 90, 160, 0.1);
+            color: var(--primary-color);
+            padding: 8px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 6rem 0;
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: white;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .cta-btn.primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .cta-btn.secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+       
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .story-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 1rem;
+                padding-top: 80px;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .mission-card,
+            .team-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in-up.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+/* Navigation */
+.custom-navbar {
+    background: rgba(44, 90, 160, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    padding: 1rem 0;
+}
+
+.custom-navbar.scrolled {
+    background: rgba(44, 90, 160, 0.98);
+    padding: 0.5rem 0;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white !important;
+    text-decoration: none;
+}
+
+.brand-text {
+    margin-right: 0.5rem;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-nav .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white !important;
+}
+
+.navbar-nav .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: left 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::before {
+    left: 0;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+
+/* Footer */
+.footer {
+    background: url('https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover;
+    color: white;
+    padding: 4rem 0 2rem;
+    position: relative;
+    margin-top: 50px;
+  }
+  
+  .footer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(52, 73, 94, 0.9) 100%);
+  }
+  
+  .footer .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .footer-brand h4 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-brand p {
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    background: var(--primary-color);
+    transform: translateY(-3px);
+  }
+  
+  .footer h5 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .footer-links a:hover {
+    color: white;
+    transform: translateX(5px);
+  }
+  
+  .contact-info p {
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+  
+  .contact-info i {
+    color: var(--secondary-color);
+    width: 20px;
+  }
+  
+  .footer-divider {
+    border-color: rgba(255, 255, 255, 0.2);
+    margin: 2rem 0 1rem;
+  }
+  
+  .copyright {
+    opacity: 0.7;
+    margin: 0;
+  }
+  
+  .footer-badges .badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .login-container {
+        padding: 20px;
+    }
+  }
+    </style>
+</head>
+<body>
+   
+   
+
+  
+        <!-- Mission Section -->
+        <section class="mission-section">
+            <div class="container">
+                <div class="section-header fade-in-up">
+                    <div class="section-badge">
+                        <i class="fa-solid fa-bullseye"></i>&nbsp;
+                        Our Mission
+                    </div>
+                    <h2 class="section-title">Empowering Staff, Elevating Service</h2>
+                    <p class="section-description">
+                        Dedicated to bridging the gap between guests and staff with innovative solutions that celebrate exceptional service
+                    </p>
+                </div>
+                
+                <div class="mission-grid">
+                    <div class="mission-card fade-in-up">
+                        <div class="mission-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Fair Gratitude</h3>
+                        <p>
+                            At Tipify, we ensure that every staff member’s dedication and exceptional service are acknowledged and rewarded through seamless, cashless tipping solutions.
+                        </p>
+                    </div>
+                    
+                    <div class="mission-card fade-in-up">
+                        <div class="mission-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Enhanced Guest Experience</h3>
+                        <p>
+                            Our platform empowers guests to express their appreciation effortlessly, fostering deeper connections and enriching their hospitality journey.
+                        </p>
+                    </div>
+                    
+                    <div class="mission-card fade-in-up">
+                        <div class="mission-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Empowering the Workforce</h3>
+                        <p>
+                            Tipify prioritizes staff motivation and growth by ensuring a transparent tipping process that drives satisfaction, teamwork, and exceptional service delivery.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <div class="container">
+                <div class="section-header fade-in-up">
+                    <div class="section-badge">
+                        <i class="fas fa-gem"></i> &nbsp;
+                         Our Values
+                    </div>
+                    <h2 class="section-title">What Drives Us</h2>
+                    <p class="section-description">
+                        Core principles that guide everything we do
+                    </p>
+                </div>
+                
+                <div class="values-grid">
+                    <div class="value-item fade-in-up">
+                        <div class="value-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h4>Empowerment</h4>
+                        <p>We uplift hotel staff by ensuring their efforts are recognized and rewarded seamlessly.</p>
+                    </div>
+                    
+                    <div class="value-item fade-in-up">
+                        <div class="value-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Efficiency</h4>
+                        <p>Our platform optimizes tipping processes, ensuring effortless experiences for staff and guests alike.</p>
+                    </div>
+                    
+                    <div class="value-item fade-in-up">
+                        <div class="value-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h4>Fairness</h4>
+                        <p>We prioritize equity and transparency, delivering tips directly to those who deserve them.</p>
+                    </div>
+                    
+                    <div class="value-item fade-in-up">
+                        <div class="value-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Guest Connection</h4>
+                        <p>We bridge the gap between guests and staff, making gratitude easy and impactful.</p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+       <!-- About the Developer -->
+<!-- <section class="team-section">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <div class="section-badge">
+                <i class="fas fa-user-cog"></i>
+                About the Creator
+            </div>
+            <h2 class="section-title">Meet the Visionary</h2>
+            <p class="section-description">
+                The passion and expertise behind Tipify, a platform transforming the way gratitude is expressed in hospitality.
+            </p>
+        </div>
+        
+        <div class="team-grid justify-content-center">
+            <div class="team-card fade-in-up">
+                <img src="/images/myphoto.jpg" alt="Saumil Prajapati" class="team-photo">
+                <h3 class="team-name">Saumil Prajapati</h3>
+                <p class="team-role">Founder & Developer</p>
+                
+                <div class="team-social">
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number" data-target="50">0</div>
+                        <div class="stat-label">Hotels Served</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number" data-target="2500">0</div>
+                        <div class="stat-label">Staff Members</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number" data-target="98">0</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                    <div class="stat-item fade-in-up">
+                        <div class="stat-number" data-target="2">0</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content fade-in-up">
+                    <h2 class="cta-title">Ready to Transform Your Hotel?</h2>
+                    <p class="cta-description">
+                        Join hundreds of hotels worldwide that trust our platform to manage their operations and empower their staff.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="/logout" class="cta-btn primary">
+                            <i class="fas fa-rocket"></i>
+                            Get Started Today
+                        </a>
+                        <!-- <a href="#" class="cta-btn secondary">
+                            <i class="fas fa-phone"></i>
+                            Schedule a Demo
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+   
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+        
+        function initializeApp() {
+            setupNavbarScroll();
+            setupScrollAnimations();
+            setupFormValidation();
+            checkManagerStatus();
+            animateStepProgress();
+            animateCounters();
+            addInteractiveEffects();
+            setupSmoothScrolling();
+            setupLazyLoading();
+            setupParallaxEffect();
+        }
+        
+        // Navbar scroll effect
+        function setupNavbarScroll() {
+            const navbar = document.querySelector('.custom-navbar') || document.getElementById('navbar');
+            
+            if (navbar) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 100) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+        }
+        
+        // Scroll animations
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+        
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, observerOptions);
+        
+            // Observe all elements with fade-in-up class
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // Form validation (placeholder - implement based on your forms)
+        function setupFormValidation() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    // Add your form validation logic here
+                    console.log('Form validation triggered');
+                });
+            });
+        }
+        
+        // Check manager status (placeholder - implement based on your needs)
+        function checkManagerStatus() {
+            // Add your manager status checking logic here
+            console.log('Manager status checked');
+        }
+        
+        // Animate step progress (placeholder - implement based on your progress elements)
+        function animateStepProgress() {
+            const progressElements = document.querySelectorAll('.step-progress');
+            progressElements.forEach(element => {
+                // Add your step progress animation logic here
+                console.log('Step progress animated');
+            });
+        }
+        
+        // Animate counters
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const observerOptions = {
+                threshold: 0.5
+            };
+        
+            const counterObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        animateCounter(counter, target);
+                        counterObserver.unobserve(counter);
+                    }
+                });
+            }, observerOptions);
+        
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+        }
+        
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + (target === 98 ? '%' : '+');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (target === 98 ? '%' : '+');
+                }
+            }, 20);
+        }
+        
+        // Add interactive effects
+        function addInteractiveEffects() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.mission-card, .team-card, .value-item');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.cta-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        background: rgba(255, 255, 255, 0.3);
+                        border-radius: 50%;
+                        transform: scale(0);
+                        animation: ripple 0.6s ease-out;
+                        pointer-events: none;
+                    `;
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        }
+        
+        // Smooth scrolling for anchor links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Lazy loading for images
+        function setupLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazy');
+                                imageObserver.unobserve(img);
+                            }
+                        }
+                    });
+                });
+        
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
+        }
+        
+        // Parallax effect for hero section
+        function setupParallaxEffect() {
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero-section');
+                const speed = scrolled * 0.5;
+                
+                if (parallax) {
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+            });
+        }
+        
+        // Add CSS for ripple animation
+        function addRippleStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Initialize ripple styles
+        addRippleStyles();
+        </script>
+    
+</body>
+</html>

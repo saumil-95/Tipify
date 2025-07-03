@@ -1,0 +1,274 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Palace Hotel Manager Detail Page</title>
+    <link rel="stylesheet" href="/css/showManager-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+	
+	</style>
+</head> -->
+<% layout('layouts/managerBoilerplate') %>
+<% pageName = 'showManager' %>
+<body>
+
+        <!-- Navigation
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-crown me-2"></i>
+                    <span class="brand-text">Grand Palace</span>
+                    <small class="brand-subtitle">Employee Management</small>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-building me-1"></i>Hotels</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-users me-1"></i>Employees</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-chart-line me-1"></i>Analytics</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav> -->
+
+    
+    <div class="min-h-screen relative overflow-hidden">
+        <!-- Background with gradient overlay -->
+        <div class="background-image">
+            <div class="gradient-overlay"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative-content">
+            <!-- Navigation -->
+            <nav class="navigation">
+                <div class="nav-container">
+                    <div class="nav-content">
+                        <div class="nav-left">
+                            <button class="back-button" onclick="window.history.back()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m12 19-7-7 7-7"/>
+                                    <path d="M19 12H5"/>
+                                </svg>
+                                <span>Back to Hotels</span>
+                            </button>
+                        </div>
+                        <div class="brand-title">Grand Palace</div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="main-container">
+                <!-- Header -->
+                <!-- <div class="page-header">
+                    <h1 class="page-title">Manager Details</h1>
+                    <div class="title-divider"></div>
+                </div> -->
+<br>
+                <!-- Manager Card -->
+                <div class="manager-card">
+                    <!-- Card Header -->
+                    <div class="card-header">
+                        <div class="manager-info">
+                            <div class="avatar-container" style="display: flex; align-items: flex-end; position: relative;">
+                                <i class="fa-solid fa-user-tie" 
+                                   style="font-size: 60px; color: #333; border-radius: 50%; background-color: #ddd; padding: 15px; display: inline-block;">
+                                </i>
+                                <div class="status-indicator" style="margin-bottom:15px; margin-right:5px;">
+                                    <div class="status-dot" style="width: 10px; height: 10px; background-color: green; border-radius: 50%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="manager-details">
+                                <h2 class="manager-name"><%= manager.username %></h2>
+                                <div class="badges">
+                                    <span class="badge badge-role">Hotel Manager</span>
+                                    <span class="badge badge-status">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <!-- Contact Information -->
+                            <div class="info-section">
+                                <h3 class="section-title">Contact Information</h3>
+                                
+                                <div class="info-item">
+                                    <div class="info-icon email-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                            <polyline points="22,6 12,13 2,6"/>
+                                        </svg>
+                                    </div>
+                                    <div class="info-content">
+                                        <p class="info-label">Email Address</p>
+                                        <p class="info-value"><%= manager.email %></p>
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-icon phone-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="info-content">
+                                        <p class="info-label">Phone Number</p>
+                                        <p class="info-value">+91 <%= manager.phone %></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hotel Assignment -->
+                            <div class="info-section">
+                                <h3 class="section-title">Hotel Assignment</h3>
+                                
+                                <div class="info-item">
+                                    <div class="info-icon location-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <div class="info-content">
+                                        <p class="info-label">Assigned Hotel</p>
+                                        <% if (hotel) { %>
+                                          <% if (hotel.locationID) { %>
+                                            <p class="info-value"><%= hotel.name %></p>
+                                            <p class="info-sublabel"><%= hotel.locationID.city %>,<%= hotel.locationID.state %></p>
+                                          <% } else { %>
+                                            Location details not available
+                                        <% } %>
+                                        <% } else { %>
+                                            <p><strong>Hotel:</strong> No hotel assigned</p>
+                                        <% } %>
+                                  
+                                    </div>
+                                </div>
+
+                                <!-- Statistics -->
+                                <div class="stats-grid">
+                                    <!-- <div class="stat-item">
+                                        <div class="stat-value">3.5</div>
+                                        <p class="stat-label">Years Experience</p>
+                                    </div> -->
+                                    <!-- <div class="stat-item">
+                                        <div class="stat-value">98%</div>
+                                        <p class="stat-label">Performance Rating</p>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="openPopup()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                <span>Update Details</span>
+                            </button>
+                            
+                            <form action="/manager/<%= manager._id %>?_method=DELETE" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="m19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"/>
+                                        <line x1="10" y1="11" x2="10" y2="17"/>
+                                        <line x1="14" y1="11" x2="14" y2="17"/>
+                                    </svg>
+                                    <span>Delete Account</span>
+                                </button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Popup Modal -->
+        <div id="popup-overlay" class="popup-overlay">
+            <div class="popup-backdrop" onclick="closePopup()"></div>
+            
+            <div class="popup-content">
+                <!-- Modal Header -->
+                <div class="popup-header">
+                    <h3 class="popup-title">Update Manager Details</h3>
+                    <button class="close-btn" onclick="closePopup()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <form method="POST" action="/manager/<%= manager._id %>?_method=PUT" id="manager-form" class="popup-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" name="username" value="<%= typeof manager !== 'undefined' ? manager.username || '' : '' %>" required class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" value="<%= typeof manager !== 'undefined' ? manager.email || '' : '' %>" required class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="password" name="password" placeholder="Enter new password" class="form-input password-input">
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg id="eye-off-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                    <path d="m9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 11 8 11 8a13.16 13.16 0 0 1-1.67 2.68"/>
+                                    <path d="M6.61 6.61A13.526 13.526 0 0 0 1 12s4 8 11 8a9.74 9.74 0 0 0 5.39-1.61"/>
+                                    <line x1="2" y1="2" x2="22" y2="22"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="form-help">Leave blank to keep current password</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" value="<%= typeof manager !== 'undefined' ? manager.phone || '' : '' %>" required class="form-input">
+                    </div>
+
+                    <!-- Form Buttons -->
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="closePopup()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Manager</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/showManager.js"></script>
+	
+</body>
+</html>

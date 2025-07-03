@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipify</title>
+    
+    <!-- Common stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Page-specific stylesheets based on page name -->
+    <% if (pageName === 'employeeDashboard') { %>
+        <link rel="stylesheet" href="/css/employeeDashboard-styles.css">
+    <% } else if (pageName === 'employeeLogin') { %>
+        <link rel="stylesheet" href="/css/employeeLogin-styles.css">
+    <% }  else if (pageName === 'tipDetails') { %>
+        <link rel="stylesheet" href="/css/tipDetails-styles.css">
+    <% } %>
+
+
+</head>
+<body>
+    <%- body %>
+    <!--====== HEADER PART START ======-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <!-- <i class="fas fa-bell-concierge"></i>     -->
+                <i class="fas fa-wallet me-2"></i>  &nbsp;
+                <span class="brand-text">Tipify</span>
+                <small class="brand-subtitle">Employee Portal</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" href="/employeeAccount"><i class="fa-solid fa-house"></i> Home</a>
+                    </li> -->
+                    <%  if(!currUser)  {  %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/employeeAccount/login"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/employeeAccount"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                      <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employees/about"><i class="fa-solid fa-circle-info"></i> About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employeeAccount/tipHistory"><i class="fas fa-coins me-2"></i>Tip History</a>
+                    </li>
+                  <%  if(!currUser)  {  %> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employeeAccount/login"><i class="fa-solid fa-right-to-bracket"></i> Sign in</a>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/employeeAccount/logout"><i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> Logout</a>
+                        </li>
+                      <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--====== HEADER PART ENDS ======-->
+
+
+
+    <!-- ====== FOOTER PART START ====== -->
+    <footer class="footer">
+        <div class="footer-overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <h4><i class="fas fa-wallet me-2"></i>Tipify</h4>
+                        <p>Tipify is the leading cashless tipping solution for hotels and restaurants. Discover staff and show appreciation instantly.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">My Profile</a></li>
+                        <li><a href="#">Update UPI ID</a></li>
+                        <li><a href="#">Change Password</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Earnings </h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Today's Tips</a></li>
+                        <li><a href="#">Weekly Summary</a></li>
+                        <li><a href="#">Monthly Average</a></li>
+                        <li><a href="#">Tip History</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>Support</h5>
+                    <div class="contact-info">
+                        <p><i class="fas fa-headset me-2"></i>24/7  Support</p>
+                        <p><i class="fas fa-phone me-2"></i>+91 70968 14752</p>
+                        <p><i class="fas fa-envelope me-2"></i>help@tipify.com</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="copyright">&copy; 2025 Tipify. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-badges"> 
+                        <span class="badge  me-2"> 
+                            <i class="fas fa-qrcode me-1"></i>QR Enabled 
+                        </span> 
+                        <span class="badge  me-2"> 
+                            <i class="fas fa-credit-card me-1"></i>Cashless 
+                        </span> 
+                        <span class="badge "> 
+                            <i class="fas fa-bolt me-1"></i>Instant Tips 
+                        </span> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--====== FOOTER PART ENDS ======-->
+
+
+    <!-- Common JavaScript files can go here -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

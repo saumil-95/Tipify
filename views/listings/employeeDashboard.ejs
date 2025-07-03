@@ -1,0 +1,482 @@
+<% layout('layouts/employeeBoilerplate') %>
+<% pageName = 'employeeDashboard' %>
+<body>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="luxury-card">
+                        <div class="card-header-luxury text-center">
+                            <h1 class="mb-0">Welcome Back, <%= employee.username %></h1>
+                            <p class="mb-0 opacity-75">Employee Dashboard</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="stats-icon primary">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-value">$1,245.50</div>
+                        <div class="stats-label">Total Tips Earned</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="stats-icon secondary">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stats-value">$31.14</div>
+                        <div class="stats-label">Average Tip</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="stats-icon success">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stats-value">40</div>
+                        <div class="stats-label">Tips This Month</div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Employee Details -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mb-4">
+                    <div class="luxury-card">
+                        <div class="card-header-luxury d-flex justify-content-between align-items-center">
+                            <h3><i class="fas fa-user-circle me-2"></i>My Profile</h3>
+                            <button class="btn btn-secondary-luxury btn-luxury" onclick="openUpdateModal()">
+                                <i class="fas fa-edit me-2"></i>Update Profile
+                            </button>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 text-center mb-4 mb-md-0">
+                                    <img src="<%= employee.photo?.url || '/images/default.png' %>" alt="<%= employee.username || 'Employee Photo' %>" class="employee-photo">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-user info-icon"></i>Full Name
+                                                </div>
+                                                <div class="info-value"><%= employee.username %></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-id-badge info-icon"></i>Employee ID
+                                                </div>
+                                                
+                                                <div class="info-value">
+                                                    <span title="<%= employee.id %>"><%= employee.id.slice(0, 12) %>...</span>
+                                                    <button onclick="navigator.clipboard.writeText('<%= employee.id %>')" style="background: none; border: none; padding: 0; margin-left: 8px; cursor: pointer;">
+                                                      <i class="fa-solid fa-copy" style="font-size: 16px; color: #555;"></i>
+                                                    </button>
+                                                  </div>
+                                                  
+                                                  
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-envelope info-icon"></i>Email
+                                                </div>
+                                                <div class="info-value"><%= employee.email %></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-phone info-icon"></i>Phone
+                                                </div>
+                                                <div class="info-value">+91 <%= employee.phone %></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-briefcase info-icon"></i>Role
+                                                </div>
+                                                <div class="info-value">
+                                                    <span class="badge-luxury"><%= employee.role.toUpperCase() %></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-card">
+                                                <div class="info-label">
+                                                    <i class="fas fa-credit-card info-icon"></i>UPI ID
+                                                </div>
+                                                <div class="info-value"><%= employee.upiID || 'Not Provided' %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>  
+                            <center>
+                                <a href="/employeeAccount/tipHistory" 
+                                 class="btn-luxury" 
+                                 style="
+                                  text-decoration: none;
+                                  background: #667eea;
+                                  width: 90%;
+                                  max-width: 600px;
+                                  display: inline-block;
+                                  text-align: center;
+                                  padding: 12px 0;
+                                  color: white;
+                                  border-radius: 6px;
+                                ">
+                                  See Tip History
+                                </a>
+                              </center>
+                              
+                               
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotel & Manager Details -->
+                <div class="col-lg-4">
+                    <!-- Hotel Details -->
+                    <div class="luxury-card mb-4">
+                        <div class="card-header-luxury">
+                            <h4><i class="fas fa-building me-2"></i>Employed at </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="info-card mb-3">
+                                <div class="info-label">
+                                    <i class="fas fa-crown info-icon"></i>Hotel Name
+                                </div>
+                                <div class="info-value"><%= employee.hotelID.name %></div>
+                            </div>
+                           
+                            <div class="info-card mb-3">
+                                <div class="info-label">
+                                    <i class="fas fa-home info-icon"></i>Address
+                                </div>
+                                <div class="info-value"><%= employee.hotelID.locationID.address %></div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">
+                                    <i class="fas fa-map-marker-alt info-icon"></i>Region
+                                </div>
+                                <div class="info-value"><%= employee.hotelID.locationID.city %>, <%= employee.hotelID.locationID.state %></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manager Details -->
+                    <div class="luxury-card">
+                        <div class="card-header-luxury">
+                            <h4><i class="fas fa-user-tie me-2"></i>Responsible Manager</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="info-card mb-3">
+                                <div class="info-label">
+                                    <i class="fas fa-user info-icon"></i>Name
+                                </div>
+                                <div class="info-value"><%= employee.managerID.username %></div>
+                            </div>
+                            <div class="info-card mb-3">
+                                <div class="info-label">
+                                    <i class="fas fa-envelope info-icon"></i>Email
+                                </div>
+                                <div class="info-value"><%= employee.managerID.email %></div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">
+                                    <i class="fas fa-phone info-icon"></i>Phone
+                                </div>
+                                <div class="info-value">+91 <%= employee.managerID.phone %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <!-- Update Profile Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-edit me-2"></i>Update Profile
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="updateForm" method="POST" action="/employeeAccount/updateDetails?_method=PUT" enctype="multipart/form-data">
+                        <div class="text-center mb-4 employee-photo-wrapper">
+                            <% try { %>
+                                <% if (employee && employee.photo && employee.photo.url) { %>
+                                    <img src="<%= employee.photo.url %>" 
+                                         alt="<%= employee.username || 'User' %>" 
+                                         class="employee-photo" 
+                                         style="width: 100px; height: 100px;" 
+                                         onerror="this.src='/images/default.png'">
+                                <% } else { %>
+                                    <img src="/images/default.png" 
+                                         alt="Default user" 
+                                         class="employee-photo" 
+                                         style="width: 100px; height: 100px;">
+                                <% } %>
+                            <% } catch (e) { %>
+                                <img src="/images/default.png" 
+                                     alt="Default user" 
+                                     class="employee-photo" 
+                                     style="width: 100px; height: 100px;">
+                            <% } %>
+                        </div>
+                        
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" name="email" value="<%= typeof employee !== 'undefined' ? employee.email || '' : '' %>" required>
+                                    <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="username"name="username" value="<%= typeof employee !== 'undefined' ? employee.username || '' : '' %>" readonly>
+                                    <label for="username"><i class="fas fa-user me-2"></i>Username</label>
+                                </div>
+                                <small class="text-muted">Username cannot be changed</small>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
+                                    <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+                                </div>
+                                <small class="text-muted">Leave blank to keep current password</small>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="phone" name="phone" value="<%= typeof employee !== 'undefined' ? employee.phone || '' : '' %>" required>
+                                    <label for="phone"><i class="fas fa-phone me-2"></i>Phone</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-control" id="role" name="role" disabled>
+                                        <option value="">Select Role</option>
+                                        <option value="waiter" <%= (typeof employee !== 'undefined' && employee.role === 'waiter') ? 'selected' : '' %>>Waiter</option>
+                                        <option value="chef" <%= (typeof employee !== 'undefined' && employee.role === 'chef') ? 'selected' : '' %>>Chef</option>
+                                        <option value="receptionist" <%= (typeof employee !== 'undefined' && employee.role === 'receptionist') ? 'selected' : '' %>>Receptionist</option>
+                                        <option value="housekeeping" <%= (typeof employee !== 'undefined' && employee.role === 'housekeeping') ? 'selected' : '' %>>Housekeeping</option>
+                                        <option value="manager" <%= (typeof employee !== 'undefined' && employee.role === 'manager') ? 'selected' : '' %>>Manager</option>
+                                        <option value="bartender" <%= (typeof employee !== 'undefined' && employee.role === 'bartender') ? 'selected' : '' %>>Bartender</option>
+                                        <option value="other" <%= (typeof employee !== 'undefined' && employee.role === 'other') ? 'selected' : '' %>>Other</option>
+                                    </select>
+                                    <label for="role"><i class="fas fa-briefcase me-2"></i>Role</label>
+                                </div>
+                                <small class="text-muted">Role cannot be changed</small>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="upiID" name="upiID" value="<%= typeof employee !== 'undefined' ? employee.upiID || '' : '' %>"  placeholder="example@paytm">
+                                    <label for="upiID"><i class="fas fa-credit-card me-2"></i>UPI ID</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input type="file" class="form-control" id="photo" name="photo">
+                                    <label for="phone"><i class="fa-solid fa-camera"></i> &nbsp;Profile Photo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-luxury" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary-luxury btn-luxury">
+                        <i class="fas fa-save me-2"></i>Update Profile
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tip History Modal -->
+    <div class="modal fade" id="tipHistoryModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-history me-2"></i>Complete Tip History
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Summary Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="stats-card">
+                                <div class="stats-value text-success">$1,245.50</div>
+                                <div class="stats-label">Total Tips</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="stats-card">
+                                <div class="stats-value text-primary">$31.14</div>
+                                <div class="stats-label">Average Tip</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="stats-card">
+                                <div class="stats-value text-warning">40</div>
+                                <div class="stats-label">Total Count</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tip List -->
+                    <div id="allTips">
+                        <!-- All tips will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+       
+
+
+        // Open update modal
+        function openUpdateModal() {
+            const modal = new bootstrap.Modal(document.getElementById('updateModal'));
+            modal.show();
+        }
+
+       
+
+        // Update profile
+        function updateProfile() {
+            const form = document.getElementById('updateForm');
+            const formData = new FormData(form);
+            
+            // Show loading state
+            const updateBtn = event.target;
+            const originalText = updateBtn.innerHTML;
+            updateBtn.innerHTML = '<i class="fas fa-spinner loading me-2"></i>Updating...';
+            updateBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Reset button
+                updateBtn.innerHTML = originalText;
+                updateBtn.disabled = false;
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('updateModal'));
+                modal.hide();
+                
+                // Show success message
+                showNotification('Profile updated successfully!', 'success');
+            }, 2000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecentTips();
+            
+            // Add staggered animation to cards
+            const cards = document.querySelectorAll('.luxury-card, .stats-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Add scroll animations
+        window.addEventListener('scroll', function() {
+            const cards = document.querySelectorAll('.luxury-card, .stats-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const cardVisible = 150;
+                
+                if (cardTop < window.innerHeight - cardVisible) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+    <script>
+        // Initialize the application
+      document.addEventListener('DOMContentLoaded', function() {
+          initializeApp();
+      });
+      
+      function initializeApp() {
+          setupNavbarScroll();
+          setupScrollAnimations();
+          setupFormValidation();
+          checkManagerStatus();
+          animateStepProgress();
+      }
+      
+      // Navbar scroll effect
+      function setupNavbarScroll() {
+          const navbar = document.querySelector('.custom-navbar');
+          
+          window.addEventListener('scroll', function() {
+              if (window.scrollY > 100) {
+                  navbar.classList.add('scrolled');
+              } else {
+                  navbar.classList.remove('scrolled');
+              }
+          });
+      }
+      </script>
+</body>
+</html>

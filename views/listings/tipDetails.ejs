@@ -1,0 +1,359 @@
+<% layout('layouts/employeeBoilerplate') %>
+<% pageName = 'tipDetails' %>
+<body>
+    <div class="container-box">
+        <!-- Header -->
+        <br><br><br><br>
+        <div class="header">
+            <h1><i class="fas fa-coins"></i> Tip History</h1>
+            <p>Welcome back, <strong><%= employee.username %></strong></p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card fade-in-delay-1">
+                <h3><i class="fas fa-calendar-day"></i> Today's Tips</h3>
+                <div class="amount">₹<%= today.total %></div>
+                <div class="details">
+                    <p><strong>Date:</strong> <%= today.date %></p>
+                    <div class="stats-badges">
+                        <span class="badge success"><i class="fas fa-check"></i> <%= today.stats.succeeded %></span>
+                        <span class="badge warning"><i class="fas fa-clock"></i> <%= today.stats.pending %></span>
+                        <span class="badge danger"><i class="fas fa-times"></i> <%= today.stats.failed %></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-card fade-in-delay-2">
+                <h3><i class="fas fa-calendar-week"></i> This Week's Tips</h3>
+                <div class="amount">₹<%= week.total %></div>
+                <div class="details">
+                    <p><strong>Period:</strong> <%= week.startDate %> - <%= week.endDate %></p>
+                    <p><strong>Transactions:</strong> <%= week.tips.length %></p>
+                </div>
+            </div>
+            
+            <div class="summary-card fade-in-delay-3">
+                <h3><i class="fas fa-calendar-alt"></i> This Month's Tips</h3>
+                <div class="amount">₹<%= month.total %></div>
+                <div class="details">
+                    <p><strong>Month:</strong> <%= month.monthName %></p>
+                    <p><strong>Transactions:</strong> <%= month.tips.length %></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Tips Detail -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-calendar-day"></i>
+                Today's Tips Detail (<%= today.date %>)
+            </div>
+            <div class="section-content">
+                <% if (today.tips.length > 0) { %>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-clock"></i> Time</th>
+                                    <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                                    <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
+                                    <th><i class="fas fa-building"></i> Hotel</th>
+                                    <th><i class="fas fa-receipt"></i> Transaction ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% today.tips.forEach(tip => { %>
+                                    <tr>
+                                        <td><%= tip.createdAt.toLocaleTimeString() %></td>
+                                        <td class="amount-cell">₹<%= tip.amount %></td>
+                                        <td><%= tip.paymentMethod.replace('_', ' ').toUpperCase() %></td>
+                                        <td>
+                                            <span class="status status-<%= tip.paymentStatus %>">
+                                                <%= tip.paymentStatus.toUpperCase() %>
+                                            </span>
+                                        </td>
+                                        <td><%= tip.hotelID ? tip.hotelID.name : 'N/A' %></td>
+                                        <td><%= tip.stripeChargeID || 'N/A' %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td><strong>Total</strong></td>
+                                    <td class="amount-cell"><strong>₹<%= today.total %></strong></td>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tips received today.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- This Week's Tips Detail -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-calendar-week"></i>
+                This Week's Tips Detail (<%= week.startDate %> - <%= week.endDate %>)
+            </div>
+            <div class="section-content">
+                <% if (week.tips.length > 0) { %>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar-alt"></i> Date & Time</th>
+                                    <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                                    <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
+                                    <th><i class="fas fa-building"></i> Hotel</th>
+                                    <th><i class="fas fa-receipt"></i> Transaction ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% week.tips.forEach(tip => { %>
+                                    <tr>
+                                        <td><%= tip.createdAt.toLocaleDateString() %> <%= tip.createdAt.toLocaleTimeString() %></td>
+                                        <td class="amount-cell">₹<%= tip.amount %></td>
+                                        <td><%= tip.paymentMethod.replace('_', ' ').toUpperCase() %></td>
+                                        <td>
+                                            <span class="status status-<%= tip.paymentStatus %>">
+                                                <%= tip.paymentStatus.toUpperCase() %>
+                                            </span>
+                                        </td>
+                                        <td><%= tip.hotelID ? tip.hotelID.name : 'N/A' %></td>
+                                        <td><%= tip.stripeChargeID || 'N/A' %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td><strong>Total</strong></td>
+                                    <td class="amount-cell"><strong>₹<%= week.total %></strong></td>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tips received this week.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- This Month's Tips Detail -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-calendar-alt"></i>
+                This Month's Tips Detail (<%= month.monthName %>)
+            </div>
+            <div class="section-content">
+                <% if (month.tips.length > 0) { %>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar-alt"></i> Date & Time</th>
+                                    <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                                    <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
+                                    <th><i class="fas fa-building"></i> Hotel</th>
+                                    <th><i class="fas fa-receipt"></i> Transaction ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% month.tips.forEach(tip => { %>
+                                    <tr>
+                                        <td><%= tip.createdAt.toLocaleDateString() %> <%= tip.createdAt.toLocaleTimeString() %></td>
+                                        <td class="amount-cell">₹<%= tip.amount %></td>
+                                        <td><%= tip.paymentMethod.replace('_', ' ').toUpperCase() %></td>
+                                        <td>
+                                            <span class="status status-<%= tip.paymentStatus %>">
+                                                <%= tip.paymentStatus.toUpperCase() %>
+                                            </span>
+                                        </td>
+                                        <td><%= tip.hotelID ? tip.hotelID.name : 'N/A' %></td>
+                                        <td><%= tip.stripeChargeID || 'N/A' %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td><strong>Total</strong></td>
+                                    <td class="amount-cell"><strong>₹<%= month.total %></strong></td>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tips received this month.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Quick Statistics -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-chart-line"></i>
+                Quick Statistics
+            </div>
+            <div class="section-content">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            <i class="fas fa-calculator"></i> Average tip per transaction (Today)
+                        </div>
+                        <div class="stat-value">
+                            <%= today.tips.length > 0 ? '₹' + (today.total / today.stats.succeeded).toFixed(2) : 'N/A' %>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            <i class="fas fa-credit-card"></i> Most common payment method (This week)
+                        </div>
+                        <div class="stat-value">
+                            <% 
+                                const paymentMethods = week.tips.reduce((acc, tip) => {
+                                    acc[tip.paymentMethod] = (acc[tip.paymentMethod] || 0) + 1;
+                                    return acc;
+                                }, {});
+                                const mostCommon = Object.keys(paymentMethods).reduce((a, b) => 
+                                    paymentMethods[a] > paymentMethods[b] ? a : b, 'N/A'
+                                );
+                            %>
+                            <%= mostCommon !== 'N/A' ? mostCommon.replace('_', ' ').toUpperCase() : 'N/A' %>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            <i class="fas fa-percentage"></i> Success rate (This month)
+                        </div>
+                        <div class="stat-value">
+                            <% 
+                                const successfulTips = month.tips.filter(tip => tip.paymentStatus === 'succeeded').length;
+                                const successRate = month.tips.length > 0 ? ((successfulTips / month.tips.length) * 100).toFixed(1) : 0;
+                            %>
+                            <%= successRate %>% (<%= successfulTips %>/<%= month.tips.length %>)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+       
+    </div>
+
+    <script>
+        // Add smooth scrolling and enhanced animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate numbers counting up
+            const amountElements = document.querySelectorAll('.amount');
+            amountElements.forEach(element => {
+                const target = parseInt(element.textContent.replace('₹', ''));
+                if (target > 0) {
+                    animateValue(element, 0, target, 1000);
+                }
+            });
+
+            // Add loading effect to tables
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                table.style.opacity = '0';
+                setTimeout(() => {
+                    table.style.transition = 'opacity 0.5s ease';
+                    table.style.opacity = '1';
+                }, 300);
+            });
+
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.zIndex = '1';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.zIndex = 'auto';
+                });
+            });
+        });
+
+        function animateValue(element, start, end, duration) {
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = '₹' + current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+    <script>
+        // Initialize the application
+      document.addEventListener('DOMContentLoaded', function() {
+          initializeApp();
+      });
+      
+      function initializeApp() {
+          setupNavbarScroll();
+          setupScrollAnimations();
+          setupFormValidation();
+          checkManagerStatus();
+          animateStepProgress();
+      }
+      
+      // Navbar scroll effect
+      function setupNavbarScroll() {
+          const navbar = document.querySelector('.custom-navbar');
+          
+          window.addEventListener('scroll', function() {
+              if (window.scrollY > 100) {
+                  navbar.classList.add('scrolled');
+              } else {
+                  navbar.classList.remove('scrolled');
+              }
+          });
+      }
+      </script>
+</body>
+</html>

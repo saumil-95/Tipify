@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipify</title>
+    
+    <!-- Common stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Page-specific stylesheets based on page name -->
+    <% if (pageName === 'allHotel') { %>
+        <link rel="stylesheet" href="/css/allHotel-styles.css">
+    <% } else if (pageName === 'editHotel') { %>
+        <link rel="stylesheet" href="/css/editHotel-styles.css">
+    <% } else if (pageName === 'newHotel') { %>
+        <link rel="stylesheet" href="/css/newHotel-styles.css">
+    <% } else if (pageName === 'showEmployee') { %>
+        <link rel="stylesheet" href="/css/showEmployee-styles.css">
+    <% } else if (pageName === 'showManager') { %>
+        <link rel="stylesheet" href="/css/showManager-styles.css">
+    <% } else if (pageName === 'showHotel') { %>
+        <link rel="stylesheet" href="/css/showHotel-styles.css">
+    <% } else if (pageName === 'managerLogin') { %>
+        <link rel="stylesheet" href="/css/managerLogin-styles.css">
+    <% } else if (pageName === 'managerSignup') { %>
+        <link rel="stylesheet" href="/css/managerSignup-styles.css">
+    <% } %>
+
+    <style>
+        /* Container */
+.dropdown-custom {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown toggle link */
+  .dropdown-toggle-custom {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Dropdown menu */
+  .dropdown-menu-custom {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    border-radius: 0.25rem;
+    margin-top: 0.25rem;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    list-style: none;
+  }
+  
+  /* Show menu when active */
+  .dropdown-menu-custom.show {
+    display: block;
+  }
+  
+  /* Dropdown items */
+  .dropdown-item-custom {
+    padding: 0.375rem 1rem;
+    color: #212529;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .dropdown-item-custom:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+  }
+  
+  /* Divider */
+  .dropdown-divider-custom {
+    margin: 0.5rem 0;
+    border-top: 1px solid #e9ecef;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+    </style>
+</head>
+<body>
+    <%- body %>
+    <!--====== HEADER PART START ======-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <!-- <i class="fas fa-bell-concierge"></i>     -->
+                <i class="fas fa-wallet me-2"></i>
+                <span class="brand-text">Tipify</span>
+                <small class="brand-subtitle">Manager Portal</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <%  if(!currUser)  {  %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/hotel"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                      <% } %>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/manager/about"><i class="fa-solid fa-circle-info"></i> About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hotel/newHotel"><i class="fa-solid fa-utensils"></i> Register a Hotel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hotel/myHotel#staff-section"><i class="fas fa-users me-1"></i>My Staff</a>
+                    </li>
+                  <%  if(!currUser)  {  %> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fa-solid fa-right-to-bracket"></i> Sign in</a>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-item dropdown-custom" id="profileDropdownWrapper">
+                          <a href="#" class="nav-link dropdown-toggle-custom" id="profileDropdownToggle">
+                            <i class="fas fa-user me-1" style="margin-top: 5px;"></i> <i class="fa-solid fa-caret-down"></i>
+                          </a>
+                          <ul class="dropdown-menu-custom" id="profileDropdownMenu">
+                            <li><a class="dropdown-item-custom" href="/manager/profile"><i class="fas fa-user me-2"></i>My Profile</a>
+                            </li>
+                            <li><hr class="dropdown-divider-custom"></li>
+                            <li><a class="dropdown-item-custom" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                          </ul>
+                        </li>
+                      <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--====== HEADER PART ENDS ======-->
+
+
+
+    <!-- ====== FOOTER PART START ====== -->
+    <footer class="footer">
+        <div class="footer-overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <h4><i class="fas fa-wallet me-2"></i>Tipify</h4>
+                        <p>Tipify is the leading cashless tipping solution for hotels and restaurants. Discover staff and show appreciation instantly.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Register a Hotel</a></li>
+                        <li><a href="#">Manage Staff</a></li>
+                        <li><a href="#">View QR Codes</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Settings </h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Profile Settings</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Logout</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>Support</h5>
+                    <div class="contact-info">
+                        <p><i class="fas fa-headset me-2" style="color:white;"></i>24/7  Support</p>
+                        <p><i class="fas fa-phone me-2" style="color:white;"></i>+91 70968 14752</p>
+                        <p><i class="fas fa-envelope me-2" style="color:white;"></i>help@tipify.com</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="copyright">&copy; 2025 Tipify. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-badges"> 
+                        <span class="badge  me-2"> 
+                            <i class="fas fa-qrcode me-1"></i>QR Enabled 
+                        </span> 
+                        <span class="badge  me-2"> 
+                            <i class="fas fa-credit-card me-1"></i>Cashless 
+                        </span> 
+                        <span class="badge "> 
+                            <i class="fas fa-bolt me-1"></i>Instant Tips 
+                        </span> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--====== FOOTER PART ENDS ======-->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('profileDropdownToggle');
+    const menu = document.getElementById('profileDropdownMenu');
+
+    // Toggle dropdown on click
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      menu.classList.toggle('show');
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', function (e) {
+      if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove('show');
+      }
+    });
+  });
+</script>
+
+    <!-- Common JavaScript files can go here -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
